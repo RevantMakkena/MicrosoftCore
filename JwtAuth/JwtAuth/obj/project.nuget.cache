@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "dgSpecHash": "R1sMuappcV8Otl4+tFX49OXGSS4unx5XngUl3QslYD18hfyhL6Wng3+tSLS2/CBdp2+uRkBU57gl1o7O4syi/w==",
+  "success": true,
+  "projectFilePath": "C:\\Rk_Work\\MicrosoftCore\\JwtAuth\\JwtAuth\\JwtAuth.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\rmakkena\\.nuget\\packages\\microsoft.extensions.apidescription.server\\3.0.0\\microsoft.extensions.apidescription.server.3.0.0.nupkg.sha512",
+    "C:\\Users\\rmakkena\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",
+    "C:\\Users\\rmakkena\\.nuget\\packages\\swashbuckle.aspnetcore\\6.2.3\\swashbuckle.aspnetcore.6.2.3.nupkg.sha512",
+    "C:\\Users\\rmakkena\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.2.3\\swashbuckle.aspnetcore.swagger.6.2.3.nupkg.sha512",
+    "C:\\Users\\rmakkena\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.2.3\\swashbuckle.aspnetcore.swaggergen.6.2.3.nupkg.sha512",
+    "C:\\Users\\rmakkena\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\6.2.3\\swashbuckle.aspnetcore.swaggerui.6.2.3.nupkg.sha512"
+  ],
+  "logs": []
+}
