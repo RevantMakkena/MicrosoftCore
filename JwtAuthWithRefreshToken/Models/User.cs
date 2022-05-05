@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using JwtAuthWithRefreshToken.Entities;
 
 namespace JwtAuthWithRefreshToken.Models
 {
@@ -9,5 +10,8 @@ namespace JwtAuthWithRefreshToken.Models
         public string Lastname { get; set; }
         public string Username { get; set; }
         [JsonIgnore]
-        public string Password { get; set; }    }
+        public string Password { get; set; }
+        [JsonIgnore]
+        public List<RefreshToken> RefreshTokens { get; set; }
+    }
 }

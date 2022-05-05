@@ -1,10 +1,12 @@
 ﻿using JwtAuthWithRefreshToken.Entities;
 using JwtAuthWithRefreshToken.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JwtAuthWithRefreshToken.Controllers
 {
+    [Authorize]
     [Route("[controller]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -15,10 +17,11 @@ namespace JwtAuthWithRefreshToken.Controllers
             _userService = userService;
         }
 
+        [AllowAnonymous]
         [HttpPost("auth")]
-        public ActionResult Authenticate(AuthenticateRequest model)
+        public ActionResult Authenticate([FromBody]AuthenticateRequest model)
         {
-            var response = _userService.Authenticate(model);
+            var response = _userService.Authenticate(model, IpAddress());
 
             if (response == null)
                 return BadRequest(new { message = "Username or password is wrong" });
@@ -27,7 +30,6 @@ namespace JwtAuthWithRefreshToken.Controllers
 
         }
 
-        [Authenticate]
         [HttpGet]
         public ActionResult GetAll()
         {
@@ -36,6 +38,15 @@ namespace JwtAuthWithRefreshToken.Controllers
                 return NotFound();
 
             return Ok(response);
+        }
+
+
+        private string IpAddress()
+        {
+            if (Request.Headers.ContainsKey("X-Forwarded-For"))
+                return Request.Headers["X-Forwarded-For"];
+            else
+                return HttpContext.Connection.RemoteIpAddress?.MapToIPv4().ToString() ?? "";
         }
 
     }
