@@ -27,5 +27,16 @@ namespace JwtAuthWithRefreshToken.Controllers
 
         }
 
+        [Authenticate]
+        [HttpGet]
+        public ActionResult GetAll()
+        {
+            var response = _userService.GetAll();
+            if(response == null)
+                return NotFound();
+
+            return Ok(response);
+        }
+
     }
 }

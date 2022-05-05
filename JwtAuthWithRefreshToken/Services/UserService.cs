@@ -14,6 +14,7 @@ namespace JwtAuthWithRefreshToken.Services
     {
         AuthenticateResponse Authenticate(AuthenticateRequest request);
         IEnumerable<User> GetAll();
+        User? GetById(int id);    
     }
 
     public class UserService : IUserService
@@ -43,7 +44,12 @@ namespace JwtAuthWithRefreshToken.Services
 
         public IEnumerable<User> GetAll()
         {
-            throw new NotImplementedException();
+            return _users;
+        }
+
+        public User? GetById(int id)
+        {
+            return _users.FirstOrDefault(x => x.Id == id);
         }
 
         private string CreateJwtToken(User user)
