@@ -1,6 +1,5 @@
 ﻿using JwtAuth.Helpers;
 using JwtAuth.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JwtAuth.Controllers
@@ -28,6 +27,14 @@ namespace JwtAuth.Controllers
             if (response == null)
                 return BadRequest(new { message = "Username or password is incorrect" });
 
+            return Ok(response);
+        }
+
+        [Authorize]
+        [HttpGet]
+        public ActionResult GetAll()
+        {
+            var response = _userService.GetAll();
             return Ok(response);
         }
     }
