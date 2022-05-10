@@ -24,12 +24,5 @@
     "C:\\Users\\rmakkena\\.nuget\\packages\\system.security.permissions\\6.0.0\\system.security.permissions.6.0.0.nupkg.sha512",
     "C:\\Users\\rmakkena\\.nuget\\packages\\system.windows.extensions\\6.0.0\\system.windows.extensions.6.0.0.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "Undefined",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Your request could not be authenticated by the GitHub Packages service. Please ensure your access token is valid and has the appropriate scopes configured."
-    }
-  ]
+  "logs": []
 }

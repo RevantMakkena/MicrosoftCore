@@ -39,7 +39,9 @@ namespace JwtAuthWithRefreshToken.Services
 
         public AuthenticateResponse Authenticate(AuthenticateRequest request, string ipAddress)
         {
-            var user = _users.FirstOrDefault(x => x.Username == request.username && x.Password == request.password);  
+            //var user = _users.FirstOrDefault(x => x.Username == request.username && x.Password == request.password);
+            var user = _dataContext.Users.SingleOrDefault(x => x.Username == request.username && x.Password == request.password);
+
             if (user == null)
                 return null;
 
@@ -51,18 +53,44 @@ namespace JwtAuthWithRefreshToken.Services
             _dataContext.Update(user);
             _dataContext.SaveChanges();
 
-            return new AuthenticateResponse() { Firstname = user.Firstname, Lastname = user.Lastname, Token = token, Username = user.Username, Id=user.Id };
+            return new AuthenticateResponse(user, token, refreshToken.Token);
         }
 
         public AuthenticateResponse RefreshToken(string token, string ipAddress)
         {
-            return new AuthenticateResponse();
+            var user = _dataContext.Users.SingleOrDefault(x => x.RefreshTokens.Any(t => t.Token == token));
+            if (user == null) return null;
+
+            var refreshToken = user.RefreshTokens.Single(t => t.Token == token);
+            if (!refreshToken.IsActive) return null;
+
+            var newRefreshToken = GenerateRefreshToken(ipAddress);
+            refreshToken.Revoked = DateTime.UtcNow;
+            refreshToken.RevokedByIp = ipAddress;
+            refreshToken.ReplacedByToken = newRefreshToken.Token;
+            user.RefreshTokens.Add(newRefreshToken);
+            _dataContext.Update(user);
+            _dataContext.SaveChanges();
+
+            //Generate new JWT 
+            var jwtToken = CreateJwtToken(user);
+            return new AuthenticateResponse(user, jwtToken, newRefreshToken.Token);
         }
 
         public bool RevokeToken(string token, string ipAddress)
         {
-            return false;
+            var user = _dataContext.Users.SingleOrDefault(u => u.RefreshTokens.Any(t => t.Token == token));
+            if(user == null) return false;
 
+            var refreshToken = user.RefreshTokens.Single(x => x.Token == token);
+            if(!refreshToken.IsActive) return false;
+
+            refreshToken.Revoked = DateTime.UtcNow;
+            refreshToken.RevokedByIp = ipAddress;
+            _dataContext.Update(user);
+            _dataContext.SaveChanges();
+
+            return true;
         }
 
         public IEnumerable<User> GetAll()
@@ -82,7 +110,7 @@ namespace JwtAuthWithRefreshToken.Services
 
             var tokenDescriptor = new SecurityTokenDescriptor()
             {
-                Expires = DateTime.Now.AddMinutes(15),
+                Expires = DateTime.Now.AddDays(7),
                 Subject = new System.Security.Claims.ClaimsIdentity(new[] {
                     new Claim(ClaimTypes.Name, user.Id.ToString()) 
                 
@@ -107,7 +135,9 @@ namespace JwtAuthWithRefreshToken.Services
                     Token = Convert.ToBase64String(randomBytes),
                     Expires = DateTime.Now.AddDays(7),
                     Created = DateTime.Now,
-                    CreatedByIp = ipAddress
+                    CreatedByIp = ipAddress,
+                    ReplacedByToken = String.Empty,
+                    RevokedByIp = String.Empty
                 };
             }
         }
